@@ -75,14 +75,12 @@ public class Bed : MonoBehaviour
         if ((step == STEP_EMPTY || step == STEP_PLOW) && playerInventory.items.Count < 1)
             return;
 
-        // активный предмет
         var activeItem = playerInventory.items[0];
 
         if (readyForAction)
         {
             if (step == STEP_EMPTY)
             {
-                //TODO добавить проверку на то, что это семечко
                 if (activeItem.count <= 0) 
                 { 
                         return;
@@ -98,7 +96,7 @@ public class Bed : MonoBehaviour
 
                 if (_growItem != null && !playerInventory.TryAddItem(_growItem, 3))
                 {
-                    // если не получилось поместить в инвентарь по какой-то причине
+                    Debug.Log("dont work");
                 }
                 else
                 {
