@@ -1,9 +1,5 @@
-using Microsoft.Unity.VisualStudio.Editor;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 
 public class Delet : MonoBehaviour
@@ -12,7 +8,7 @@ public class Delet : MonoBehaviour
     public Sprite newSprite;
     public Inventory Item;
     public Item Empty;
-    private InventorySlots InventorySlots;
+    [SerializeField] private InventorySlots InventorySlots;
     private Text count;
     public void Del()
     {
@@ -26,8 +22,7 @@ public class Delet : MonoBehaviour
         
         itemImage.sprite = newSprite;
         count.text = "";
-        Item.items[index] = Empty;
-        Item.items[index].count = 0;
+        Item.items[index] = null;
         
         InventorySlots.Restart();
         
