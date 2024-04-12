@@ -1,3 +1,4 @@
+using DefaultNamespace;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ public class Slot : MonoBehaviour
     public Inventory Item;
     public Item Empty;
 
-    public void FillSlot(Item item)
+    public void FillSlot(ItemInstance item)
     {
         itemImage = GetComponentsInChildren<Image>()[1];
         count = GetComponentInChildren<Text>();
@@ -22,7 +23,7 @@ public class Slot : MonoBehaviour
         else
         {
             count.text = "x" + item.count.ToString();
-            itemImage.sprite = item.sprite;
+            itemImage.sprite = item.item.sprite;
         }
     }
 }

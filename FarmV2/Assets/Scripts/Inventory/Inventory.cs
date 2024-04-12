@@ -1,33 +1,35 @@
 using System.Collections.Generic;
+using DefaultNamespace;
 using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
 
-    public List<Item> items = new List<Item>();
+    public List<ItemInstance> items = new List<ItemInstance>();
 
-    public void CheckIfItemExist(SpriteRenderer item)
+    public bool TryAddItem(ItemInstance item, int count = 1)
     {
-
         for (int i = 0; i < items.Count; i++)
         {
-            if(item.sprite == items[i].sprite)
+            if(item.item == items[i].item)
             {
-                items[i].count += 2;
-                break;
+                items[i].count += count;
+                return true;
             }
-            else if(items[i].name == "Empty")
+            if (items[i].item == null )
             {
-                item.sprite = items[i].sprite;
-                items[i].count += 2;
+                items[i] = item;
+                return true;
             }
         }
+        
+        // Нужно какое-то ограничение на размер инвентаря ( если надо)
+        // А то можно делать вот такое:
+        items.Add(item);
+        // и инвентарь станет резиновым)))
+
+        return false;
     }
 
-    public void AddItemToInventory(Item item)
-    {
-        item.count++;   
-        items.Add(item);
-    }
 
 }
