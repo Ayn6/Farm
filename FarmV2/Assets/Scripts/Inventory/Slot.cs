@@ -1,9 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
 
 public class Slot : MonoBehaviour
 {
@@ -18,17 +14,15 @@ public class Slot : MonoBehaviour
         itemImage = GetComponentsInChildren<Image>()[1];
         count = GetComponentInChildren<Text>();
 
-        if (item.count > 0)
+        if (item == null || (item != null && item.count <= 0))
+        {
+            count.text = "";
+            itemImage.sprite = newSprite;
+        }
+        else
         {
             count.text = "x" + item.count.ToString();
             itemImage.sprite = item.sprite;
         }
-        else if(item.count <= 0)
-        {
-            count.text = "";
-            itemImage.sprite = newSprite;
-        };
-
     }
-
 }
