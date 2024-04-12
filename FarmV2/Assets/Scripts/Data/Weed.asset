@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Weed
   sprite: {fileID: 21300000, guid: 346f198fb2f4e5a4d81f64e985ddbf72, type: 3}
   type: 1
-  counte: 1
+  count: 2
   price: 0
   lvlOpen: 1
   time: 30

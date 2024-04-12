@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
+
 
 public class Bed : MonoBehaviour
 {
@@ -27,6 +29,10 @@ public class Bed : MonoBehaviour
     private float timeSinceLastUse = 0f;
 
     public Inventory Plant;
+    private Item r;
+    private float time;
+
+
 
     void Start()
     {
@@ -39,6 +45,7 @@ public class Bed : MonoBehaviour
     private void FixedUpdate()
     {
         timeSinceLastUse += Time.deltaTime;
+
         Weed();
 
         if (step != STEP_GROWS)
@@ -66,6 +73,8 @@ public class Bed : MonoBehaviour
     }
     public void OnMouseDown()
     {
+        r = Plant.items[0];
+        time = Plant.items[0].time;
 
         if (readyForAction)
         {
@@ -73,18 +82,24 @@ public class Bed : MonoBehaviour
             {
                 if (items[0].type == Item.TYPEFOOD)
                 {
+                    if(r.count <= 0)
+                    {
+                        return;
+                    }
                     spriteRenderer.sprite = items[0].sprite;
                     step = STEP_GROWS;
+                    r.count -= 1;
                     StartCoroutine(Grow());
                     UseGarden();
                 }
             }
             else if(step == STEP_READY)
             {
-
-                spriteRenderer.sprite = Plant.items[0].sprite;
+                
+                Plant.CheckIfItemExist(spriteRenderer);
+                spriteRenderer.sprite = items[2].sprite;
                 step = STEP_PLOW;
-                Plant.items[0].count = 2;
+                
             }
             else if (step == STEP_WEED)
             {
@@ -107,15 +122,15 @@ public class Bed : MonoBehaviour
 
     private IEnumerator Grow()
     {
-        yield return new WaitForSeconds(items[1].time);
-        spriteRenderer.sprite = items[1].sprite;
+        yield return new WaitForSeconds(time);
+        spriteRenderer.sprite = r.sprite;
         step = STEP_READY;
-        UseGarden();
+        UseGarden();  
     }
     private IEnumerator Off()
     {
         yield return new WaitForSeconds(5f);
-        spriteRenderer.sprite = Plant.items[0].sprite;
+        spriteRenderer.sprite = items[3].sprite;
         step = STEP_EMPTY;
     }
 

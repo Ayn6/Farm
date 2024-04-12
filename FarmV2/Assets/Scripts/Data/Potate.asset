@@ -15,7 +15,7 @@ MonoBehaviour:
   name: Potate
   sprite: {fileID: 21300000, guid: 1da13cf07f4f3ff4ea0d94dfa8ff680f, type: 3}
   type: 1
-  count: 3
+  count: 0
   price: 1
   lvlOpen: 1
   time: 5

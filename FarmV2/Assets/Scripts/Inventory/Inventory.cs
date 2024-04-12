@@ -1,49 +1,37 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class Inventory : MonoBehaviour
 {
+
     public List<Item> items = new List<Item>();
 
-    private void Start()
+    public void CheckIfItemExist(SpriteRenderer item)
     {
-        items.Add(items[0]);
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            if(item.sprite == items[i].sprite)
+            {
+                items[i].count += 2;
+                break;
+            }
+            else if(items[i].name == "Empty")
+            {
+                item.sprite = items[i].sprite;
+                items[i].count += 2;
+            }
+        }
     }
 
-    //public static void CheckWhithOutExist(Item item)
-    //{
-    //    bool exist = false;
-    //    for (int i = 0; i < items.Count; i++)
-    //    {
-    //        if (item.name == items[i].name)
-    //        {
-    //            items[i].count += item.count;
-    //            exist = true;
-    //            break;
-    //        }
-    //    }
-    //    if (!exist)
-    //    {
-    //        addItemToInventory(item);
-    //    }
-    //}
-    //private static void addItemToInventory(Item item)
-    //{
-    //    bool added = false;
-    //    for (int i = 0; i < items.Count; i++)
-    //    {
-    //        if (items[i].name == "empty")
-    //        {
-    //            items[i] = item;
-    //            added = true;
-    //            break;
-    //        }
-    //    }
-    //    if (!added)
-    //    {
-    //        items.Add(item);
-    //    }
-    //}
+    public void AddItemToInventory(Item item)
+    {
+        item.count++;   
+        items.Add(item);
+    }
 
 }
