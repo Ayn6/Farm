@@ -1,8 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Progress;
+using DefaultNamespace;
+using UnityEngine.Serialization;
 
 
 public class Bed : MonoBehaviour
@@ -28,10 +28,8 @@ public class Bed : MonoBehaviour
 
     private float timeSinceLastUse = 0f;
 
-    public Inventory Plant;
-    private Item r;
-    private float time;
-
+    [SerializeField] private ItemInstance _growItem;
+    [FormerlySerializedAs("Plant")] public Inventory playerInventory;
 
 
     void Start()
@@ -39,7 +37,6 @@ public class Bed : MonoBehaviour
         spriteBed = GetComponent<SpriteRenderer>();
         spriteRenderer = GetComponentsInChildren<SpriteRenderer>()[1];
         player = GameObject.FindWithTag("Player");
-
     }
 
     private void FixedUpdate()
@@ -67,43 +64,52 @@ public class Bed : MonoBehaviour
         }
         
     }
+
     public void UseGarden()
     {
         timeSinceLastUse = 0f;
     }
+
     public void OnMouseDown()
     {
-        r = Plant.items[0];
-        time = Plant.items[0].time;
+        if ((step == STEP_EMPTY || step == STEP_PLOW) && playerInventory.items.Count < 1)
+            return;
+
+        // активный предмет
+        var activeItem = playerInventory.items[0];
 
         if (readyForAction)
         {
             if (step == STEP_EMPTY)
             {
-                if (items[0].type == Item.TYPEFOOD)
-                {
-                    if(r.count <= 0)
-                    {
+                //TODO добавить проверку на то, что это семечко
+                if (activeItem.count <= 0) 
+                { 
                         return;
-                    }
-                    spriteRenderer.sprite = items[0].sprite;
-                    step = STEP_GROWS;
-                    r.count -= 1;
-                    StartCoroutine(Grow());
-                    UseGarden();
                 }
+                spriteRenderer.sprite = items[0].sprite;
+                step = STEP_GROWS;
+                activeItem.count -= 1;
+                StartCoroutine(Grow(playerInventory.items[0].item.time, activeItem.item, 2));
+                UseGarden();
             }
-            else if(step == STEP_READY)
+            else if (step == STEP_READY)
             {
-                
-                Plant.CheckIfItemExist(spriteRenderer);
-                spriteRenderer.sprite = items[2].sprite;
-                step = STEP_PLOW;
-                
+
+                if (_growItem != null && !playerInventory.TryAddItem(_growItem, 3))
+                {
+                    // если не получилось поместить в инвентарь по какой-то причине
+                }
+                else
+                {
+                    spriteRenderer.sprite = items[2].sprite;
+                    step = STEP_PLOW;
+                }
+
             }
             else if (step == STEP_WEED)
             {
-                Off();
+                StartCoroutine(Off());
             }
         }
 
@@ -120,10 +126,11 @@ public class Bed : MonoBehaviour
         }
     }
 
-    private IEnumerator Grow()
+    private IEnumerator Grow(float time, Item growItem, int count)
     {
         yield return new WaitForSeconds(time);
-        spriteRenderer.sprite = r.sprite;
+        spriteRenderer.sprite = growItem.sprite;
+        _growItem = new ItemInstance() { item = growItem, count = count };
         step = STEP_READY;
         UseGarden();  
     }

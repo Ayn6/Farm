@@ -22,12 +22,17 @@ public class InventorySlots : MonoBehaviour
     {
         slots = GetComponentsInChildren<Slot>().ToList();
 
-        int i = 0;
-
-        foreach (Slot slot in slots)
+        for (var idx = 0; idx < slots.Count; idx++)
         {
-            slot.FillSlot(Item.items[i]);
-            i++;       
+            var slot = slots[idx];
+            if (idx < Item.items.Count)
+            {
+                slot.FillSlot(Item.items[idx]);
+            }
+            else
+            {
+                slot.FillSlot(null);
+            }
         }
 
     }

@@ -1,9 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
+using DefaultNamespace;
 
 public class Slot : MonoBehaviour
 {
@@ -13,20 +10,20 @@ public class Slot : MonoBehaviour
     public Inventory Item;
     public Item Empty;
 
-    public void FillSlot(Item item)
+    public void FillSlot(ItemInstance item)
     {
         itemImage = GetComponentsInChildren<Image>()[1];
         count = GetComponentInChildren<Text>();
 
-        if (item.count > 0)
-        {
-            count.text = "x" + item.count.ToString();
-            itemImage.sprite = item.sprite;
-        }
-        else if(item.count <= 0)
+        if (item == null || (item != null && item.count <= 0))
         {
             count.text = "";
             itemImage.sprite = newSprite;
+        }
+        else
+        {
+            count.text = "x" + item.count.ToString();
+            itemImage.sprite = item.item.sprite;
         };
 
     }
